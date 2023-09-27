@@ -22,7 +22,6 @@ export const verifyToken = (token: string) => {
     );
     return decodedPayload;
   } else {
-    console.error("JWT FAIL");
     return false;
   }
 };

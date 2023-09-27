@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createToken } from "../../middleware/JWT/create-token.js";
+import { createToken } from "../../middleware/JWT/token-logic/create-token.js";
 import { generateId } from "../../helpers/make-id.js";
 
 export const createAccount = (req: Request, res: Response) => {
