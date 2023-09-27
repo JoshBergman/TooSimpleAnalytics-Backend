@@ -3,14 +3,16 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 
+import accountRouter from './routes/account.js'
+import analyticRouter from './routes/analytic.js'
+
 dotenv.config();
 
 const app = express();
 app.use(helmet());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use(accountRouter);
+app.use(analyticRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
