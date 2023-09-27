@@ -1,11 +1,11 @@
 // src/app.ts
-import express from 'express';
-import dotenv from 'dotenv';
-import helmet from 'helmet';
-import bodyParser from 'body-parser';
+import express from "express";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import bodyParser from "body-parser";
 
-import accountRouter from './routes/account.js'
-import analyticRouter from './routes/analytic.js'
+import accountRouter from "./routes/account.js";
+import analyticRouter from "./routes/analytic.js";
 
 dotenv.config();
 
