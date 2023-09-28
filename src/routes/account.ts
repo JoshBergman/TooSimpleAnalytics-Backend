@@ -1,19 +1,17 @@
 import { Router } from "express";
-import { createAccount } from "../controllers/account/create-account.js";
 import { authenticate } from "../middleware/JWT/authenticate.js";
 
-export const router = Router();
+import { createAccount } from "../controllers/account/create-account.js";
+import { login } from "../controllers/account/login.js";
 
-router.get("/", (req, res) => {
-  res.send("Hello World! @ acc");
-});
+export const router = Router();
 
 router.post("/create", (req, res) => {
   createAccount(req, res);
 });
 
-router.post("/authtest", authenticate, (req, res) => {
-  res.send("Authorized");
+router.post("/login", (req, res) => {
+  login(req, res);
 });
 
 export default router;

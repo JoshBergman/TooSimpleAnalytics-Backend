@@ -9,7 +9,6 @@ export const createAccount = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
   const userID = generateId();
-
   const user: IUser = {
     id: userID,
     email: email,
@@ -22,7 +21,7 @@ export const createAccount = async (req: Request, res: Response) => {
   try {
     const emailExists = await users.findOne({ email: email });
     if (emailExists) {
-      res.status(400).send("Email already exists");
+      res.status(400).json({ error: "Email already exists" });
       return;
     }
 
@@ -35,6 +34,5 @@ export const createAccount = async (req: Request, res: Response) => {
   //create and send JWT to user
   const token = createToken({ id: userID, email: email });
 
-  res.status(200);
-  res.send({ token });
+  res.status(200).json({ token });
 };
