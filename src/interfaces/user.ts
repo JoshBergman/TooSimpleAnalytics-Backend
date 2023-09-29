@@ -3,8 +3,9 @@ export interface IUser {
   email: string;
   password: string;
   projects: {
-    id: string;
-    name: string;
-  }[];
+    [key: string]: {
+      views: number;
+    };
+  };
   resetId?: string;
 }

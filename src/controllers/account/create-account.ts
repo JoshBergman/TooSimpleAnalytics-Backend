@@ -20,7 +20,7 @@ export const createAccount = async (req: Request, res: Response) => {
     id: userID,
     email: email,
     password: password,
-    projects: [],
+    projects: {},
   };
 
   //add user to db
