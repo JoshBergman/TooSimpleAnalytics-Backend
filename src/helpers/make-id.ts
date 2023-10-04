@@ -20,7 +20,7 @@ export const generateId = () => {
   const generateTimeIdValue = () => {
     const date = new Date();
     const timeValue = date.getTime() + "";
-    return timeValue.slice(timeValue.length - 3);
+    return timeValue.slice(0, timeValue.length - 3);
   };
 
   const id = generateRandomIdValues(8) + generateTimeIdValue();
