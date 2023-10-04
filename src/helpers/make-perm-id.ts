@@ -1,9 +1,7 @@
-// My attempt at making a unique ID for each user, based off of
-// uuidV1, and uuidV4
+// Based on make-id.ts this is modified to provide users with a non-renewable id.
+// although it could be renewed to reset the analytic links
 
-//effectively returns 16 digits (8 random, 8 time based)
-
-export const generateId = () => {
+export const generatePermId = () => {
   const generateRandomIdValues = (length: number) => {
     const characters =
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -23,6 +21,6 @@ export const generateId = () => {
     return timeValue.slice(timeValue.length - 3);
   };
 
-  const id = generateRandomIdValues(8) + generateTimeIdValue();
+  const id = generateRandomIdValues(10) + generateTimeIdValue();
   return id;
 };

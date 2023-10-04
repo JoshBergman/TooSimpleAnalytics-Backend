@@ -3,9 +3,9 @@ import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
 
 export const addView = async (req: Request, res: Response) => {
-  const userID_projectName = req.params.userID_projectName;
-  const [userID, projectName] = userID_projectName.split("-");
-  if (!validateString(userID, 2, 99) || !validateString(projectName, 2, 99)) {
+  const permID_projectName = req.params.permID_projectName;
+  const [permID, projectName] = permID_projectName.split("-");
+  if (!validateString(permID, 2, 99) || !validateString(projectName, 2, 99)) {
     res.status(400).json({ error: "Invalid user or project ID(s)" });
     return;
   }
@@ -15,7 +15,7 @@ export const addView = async (req: Request, res: Response) => {
   try {
     await client.connect();
     const addViewResponse = await users.updateOne(
-      { id: userID },
+      { permID: permID },
       { $inc: { [`projects.${projectName}.views`]: 1 } }
     );
 

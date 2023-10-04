@@ -5,6 +5,7 @@ import { createClient } from "../../helpers/create-client.js";
 import { IUser } from "../../interfaces/user.js";
 import { validateEmail } from "../../validations/validate-email.js";
 import { validateString } from "../../validations/validate-string.js";
+import { generatePermId } from "../../helpers/make-perm-id.js";
 
 export const createAccount = async (req: Request, res: Response) => {
   const email = req.body.email;
@@ -16,8 +17,10 @@ export const createAccount = async (req: Request, res: Response) => {
 
   //user object sent to db
   const userID = generateId();
+  const permID = generatePermId();
   const user: IUser = {
     id: userID,
+    permID: permID,
     email: email,
     password: password,
     projects: {},
