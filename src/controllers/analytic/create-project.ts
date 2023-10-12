@@ -16,7 +16,7 @@ export const createProject = async (req: Request, res: Response) => {
     await client.connect();
     const addProjectResponse = await users.updateOne(
       { id: id },
-      { $set: { [`projects.${projectName}`]: { views: 0 } } }
+      { $set: { [`projects.${projectName}`]: { totalViews: 0 } } }
     );
 
     if (addProjectResponse.modifiedCount >= 1) {

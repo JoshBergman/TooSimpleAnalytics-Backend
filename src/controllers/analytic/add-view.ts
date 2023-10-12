@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
+import { getViewDate } from "../../helpers/get-view-date.js";
 
 export const addView = async (req: Request, res: Response) => {
   const permID_projectName = req.params.permID_projectName;
@@ -14,12 +15,21 @@ export const addView = async (req: Request, res: Response) => {
   const { client, users } = createClient();
   try {
     await client.connect();
-    const addViewResponse = await users.updateOne(
+    const addTotalViewResponse = await users.updateOne(
       { permID: permID },
-      { $inc: { [`projects.${projectName}.views`]: 1 } }
+      { $inc: { [`projects.${projectName}.totalViews`]: 1 } }
     );
 
-    if (addViewResponse.modifiedCount >= 1) {
+    const [year, month, day] = getViewDate();
+    const addDatedViewResponse = await users.updateOne(
+      { permID: permID },
+      { $inc: { [`projects.${projectName}.${year}.${month}.${day}`]: 1 } }
+    );
+
+    if (
+      addTotalViewResponse.modifiedCount >= 1 &&
+      addDatedViewResponse.modifiedCount >= 1
+    ) {
       res.status(200).send();
     } else {
       res.status(500).send();

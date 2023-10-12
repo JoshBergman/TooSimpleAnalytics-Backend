@@ -4,8 +4,15 @@ export interface IUser {
   email: string;
   password: string;
   projects: {
-    [key: string]: {
-      views: number;
+    [projectName: string]: {
+      totalViews: number;
+      viewDates: {
+        [year: string]: {
+          [month: string]: {
+            [day: string]: number;
+          };
+        };
+      };
     };
   };
   resetId?: string;
