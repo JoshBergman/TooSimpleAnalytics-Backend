@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 
@@ -9,6 +10,9 @@ import analyticRouter from "./routes/analytic.js";
 dotenv.config();
 
 const app = express();
+
+app.use(cors());
+
 app.use(helmet());
 app.use(bodyParser.json());
 
