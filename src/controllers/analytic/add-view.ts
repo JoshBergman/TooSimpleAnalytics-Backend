@@ -23,7 +23,11 @@ export const addView = async (req: Request, res: Response) => {
     const [year, month, day] = getViewDate();
     const addDatedViewResponse = await users.updateOne(
       { permID: permID },
-      { $inc: { [`projects.${projectName}.${year}.${month}.${day}`]: 1 } }
+      {
+        $inc: {
+          [`projects.${projectName}.viewDates.${year}.${month}.${day}`]: 1,
+        },
+      }
     );
 
     if (
