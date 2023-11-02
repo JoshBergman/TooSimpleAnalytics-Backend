@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response) => {
 
     //if no account exists or wrong password
     if (!user || password !== user.password) {
-      res.status(400).json({ error: "Email or password is incorrect" });
+      res.status(404).json({ error: "Email or password is incorrect" });
       return;
     }
 
