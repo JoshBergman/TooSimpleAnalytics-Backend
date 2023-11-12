@@ -5,7 +5,14 @@ import { getViewDate } from "../../helpers/get-view-date.js";
 
 export const addView = async (req: Request, res: Response) => {
   const permID_projectName = req.params.permID_projectName;
-  const [permID, projectName] = permID_projectName.split("-");
+  const id_name_split_index = permID_projectName.indexOf("-");
+  const [permID, projectName] = [
+    permID_projectName.slice(0, id_name_split_index),
+    permID_projectName.slice(
+      id_name_split_index + 1,
+      permID_projectName.length
+    ),
+  ];
   if (!validateString(permID, 2, 99) || !validateString(projectName, 2, 99)) {
     res.status(400).json({ error: "Invalid user or project ID(s)" });
     return;
