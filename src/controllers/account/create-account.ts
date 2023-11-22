@@ -34,12 +34,11 @@ export const createAccount = async (req: Request, res: Response) => {
     userID = account.id;
 
     if (account.verify !== verifyCode) {
-      res
-        .status(400)
-        .json({
-          error:
-            "Invalid email verification code. Please restart signup process.",
-        });
+      res.status(400).json({
+        error:
+          "Invalid email verification code. Please restart signup process.",
+      });
+      return;
     }
 
     const updateResponse = await users.updateOne(
@@ -52,6 +51,7 @@ export const createAccount = async (req: Request, res: Response) => {
       res.status(500).json({
         error: "Failed to activate account, please try again in one minute.",
       });
+      return;
     }
   } finally {
     await client.close();
