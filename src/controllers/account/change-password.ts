@@ -8,9 +8,11 @@ import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
 import { generateEmailVerificationCode } from "../../helpers/make-verify-email-code.js";
 import { generateId } from "../../helpers/make-id.js";
+import { createToken } from "../../middleware/JWT/token-logic/create-token.js";
 
 export const changePassword = async (req: Request, res: Response) => {
   const id = req.body.auth.userId;
+  const email = req.body.auth.email;
   const newPassword = req.body.password;
   const verification = req.body.verification;
 
@@ -37,7 +39,10 @@ export const changePassword = async (req: Request, res: Response) => {
         );
 
         if (updateResponse && updateResponse.modifiedCount >= 1) {
-          res.status(200).json({ message: "Password changed" });
+          const newToken = createToken({ id: id, email: email }); //keeps the user logged in as the previously held jwt is invalidated by new id value
+          res
+            .status(200)
+            .json({ token: newToken, message: "Password changed" });
           return;
         }
       } else {
