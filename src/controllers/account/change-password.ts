@@ -39,7 +39,7 @@ export const changePassword = async (req: Request, res: Response) => {
         );
 
         if (updateResponse && updateResponse.modifiedCount >= 1) {
-          const newToken = createToken({ id: id, email: email }); //keeps the user logged in as the previously held jwt is invalidated by new id value
+          const newToken = createToken({ id: newID, email: email }); //keeps the user logged in as the previously held jwt is invalidated by new id value
           res
             .status(200)
             .json({ token: newToken, message: "Password changed" });
