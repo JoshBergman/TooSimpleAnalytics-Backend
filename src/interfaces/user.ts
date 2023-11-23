@@ -4,6 +4,7 @@ export interface IUser {
   email: string;
   password: string;
   verify: string; // used for verifying the user has ownership / access to the email used for the account
+  resetID?: string;
   projects: {
     [projectName: string]: {
       totalViews: number;
@@ -16,5 +17,4 @@ export interface IUser {
       };
     };
   };
-  resetId?: string;
 }

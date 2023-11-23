@@ -6,44 +6,48 @@ import { Request, Response } from "express";
 import { validateEmail } from "../../validations/validate-email.js";
 import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
+import { generateEmailVerificationCode } from "../../helpers/make-verify-email-code.js";
+import { generateId } from "../../helpers/make-id.js";
 
 export const changePassword = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
+  const id = req.body.auth.userId;
+  const newPassword = req.body.password;
+  const verification = req.body.verification;
 
-  if (
-    !validateEmail(email) ||
-    !validateString(oldPassword, 2, 99) ||
-    !validateString(newPassword, 2, 99)
-  ) {
-    res.status(400).json({ error: "Invalid email or password" });
+  if (!validateString(newPassword, 2, 99)) {
+    res.status(400).json({ error: "Invalid password syntax" });
     return;
   }
 
-  //get existing password and if it is a match update password to new
+  // 1. get existing resetID (verification code)
+  // 2. compare verification code's
+  // 3. change password if all matches up
   const { client, users } = createClient();
   try {
     await client.connect();
-    const user = await users.findOne({ email: email });
+    const user = await users.findOne({ id: id });
+    if (user && user.resetID) {
+      if (verification === user.resetID) {
+        //When verification code matches update password
+        const newVerifyCode = generateEmailVerificationCode(); //used so that a password change code is not used more than once
+        const newID = generateId(); // creating a new id resets the JWT and logs out existing instances
+        const updateResponse = await users.updateOne(
+          { id: id },
+          { $set: { password: newPassword, resetID: newVerifyCode, id: newID } }
+        );
 
-    if (!user || oldPassword !== user.password) {
-      res.status(400).json({ error: "Email or password is incorrect" });
-      return;
+        if (updateResponse && updateResponse.modifiedCount >= 1) {
+          res.status(200).json({ message: "Password changed" });
+          return;
+        }
+      } else {
+        //case when verification code does not match
+        res.status(401).json({ error: "Verification code invalid." });
+      }
     }
-
-    const updateResponse = await users.updateOne(
-      { email: email },
-      { $set: { password: newPassword } }
-    );
-
-    if (updateResponse && updateResponse.modifiedCount >= 1) {
-      res.status(200).json({ message: "Password updated" });
-    } else {
-      res
-        .status(400)
-        .json({ error: "Password not updated, please try again later" });
-    }
+    res
+      .status(400)
+      .json({ error: "Password not updated, please try again later." });
   } finally {
     await client.close();
   }
