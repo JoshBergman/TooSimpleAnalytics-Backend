@@ -42,6 +42,8 @@ export const createVerifyEmail = async (req: Request, res: Response) => {
       }
     }
 
+    //todo find any document with  a matching ID or permID to prevent duplicate id's (Only really a problem if there were many more users)
+
     await users.insertOne(user);
 
     const emailConfig: IEmailConfig = {
