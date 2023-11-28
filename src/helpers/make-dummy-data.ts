@@ -42,8 +42,9 @@ export const makeDummyData = () => {
           totalViews += randomViews;
 
           // Assign the random number of views to the day
-          result[year.toString()][(month + 1).toString()][day.toString()] =
-            randomViews;
+          result[year.toString()][(month + 1).toString()][
+            day.toString()
+          ].views = randomViews;
         }
       }
     }

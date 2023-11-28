@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
 import { getViewDate } from "../../helpers/get-view-date.js";
+import { get_location_from_ip } from "../../helpers/get-location-from-ip.js";
 
 export const addView = async (req: Request, res: Response) => {
   const permID_projectName = req.params.permID_projectName;
@@ -18,6 +19,13 @@ export const addView = async (req: Request, res: Response) => {
     return;
   }
 
+  // get ip then location from the ip
+  const ip = req.clientIp;
+  let location = null;
+  if (typeof ip === "string") {
+    location = await get_location_from_ip(ip);
+  }
+
   //add project view to db
   const { client, users } = createClient();
   try {
@@ -28,13 +36,25 @@ export const addView = async (req: Request, res: Response) => {
     );
 
     const [year, month, day] = getViewDate();
+    const dbDayPath = `projects.${projectName}.viewDates.${year}.${month}.${day}`;
+    const updateConfig = {
+      $inc: {
+        [`${dbDayPath}.views`]: 1,
+      },
+    };
+    if (location) {
+      const { countryCode, region } = location;
+      if (countryCode.toUpperCase() === "US") {
+        updateConfig.$inc[
+          `${dbDayPath}.locations.${countryCode}.${region}`
+        ] = 1; //add state level for us views
+      } else {
+        updateConfig.$inc[`${dbDayPath}.locations.${countryCode}`] = 1;
+      }
+    }
     const addDatedViewResponse = await users.updateOne(
       { permID: permID },
-      {
-        $inc: {
-          [`projects.${projectName}.viewDates.${year}.${month}.${day}`]: 1,
-        },
-      }
+      updateConfig
     );
 
     if (

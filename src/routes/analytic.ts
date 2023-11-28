@@ -12,7 +12,7 @@ import { locationTest } from "../controllers/analytic/location-test.js";
 const getClientIp = requestIp.mw();
 export const router = Router();
 
-router.get("/view/:permID_projectName", (req, res) => {
+router.get("/view/:permID_projectName", getClientIp, (req, res) => {
   addView(req, res);
 });
 
