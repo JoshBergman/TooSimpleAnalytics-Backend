@@ -3,6 +3,7 @@ import { validateString } from "../../validations/validate-string.js";
 import { createClient } from "../../helpers/create-client.js";
 import { getViewDate } from "../../helpers/get-view-date.js";
 import { get_location_from_ip } from "../../helpers/get-location-from-ip.js";
+import { parse_user_agent } from "../../helpers/agent-parser/parser.js";
 
 export const addView = async (req: Request, res: Response) => {
   const permID_projectName = req.params.permID_projectName;
@@ -26,6 +27,18 @@ export const addView = async (req: Request, res: Response) => {
     location = await get_location_from_ip(ip);
   }
 
+  // browser and device
+  // todo implement user-agent hints before trying user agent string parsing
+
+  //user agent string parsing (not preferred to do but fine as a backup if hints are not available)
+  const userAgent = req.headers["user-agent"];
+  let browser = null;
+  let isMobile = false;
+  if (userAgent) {
+    const [foundBrowser, isMobile] = parse_user_agent(userAgent); //todo add parsing for crawlers and robots
+    browser = foundBrowser;
+  }
+
   //add project view to db
   const { client, users } = createClient();
   try {
@@ -42,6 +55,8 @@ export const addView = async (req: Request, res: Response) => {
         [`${dbDayPath}.views`]: 1,
       },
     };
+
+    // add location if available
     if (location) {
       const { countryCode, region } = location;
       if (countryCode.toUpperCase() === "US") {
@@ -52,6 +67,15 @@ export const addView = async (req: Request, res: Response) => {
         updateConfig.$inc[`${dbDayPath}.locations.${countryCode}`] = 1;
       }
     }
+
+    //add browser and device if available
+    if (browser) {
+      updateConfig.$inc[`${dbDayPath}.agent.browser.${browser}`] = 1;
+      updateConfig.$inc[
+        `${dbDayPath}.agent.device.${isMobile ? "mobile" : "desktop"}`
+      ] = 1;
+    }
+
     const addDatedViewResponse = await users.updateOne(
       { permID: permID },
       updateConfig
