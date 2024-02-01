@@ -1,3 +1,6 @@
+//! This paraser implementation will soon be replaced by a more robust solution using
+//! more modern methods such as user agent hints and smarter parsing
+
 // DATA LOCATIONS:
 // All KEYWORDS are stored in gatherKeywords.ts, hardcoded into the switch case.
 // Keyword combinations to BROWSER IDENTIFICATIONS is in identify.ts
