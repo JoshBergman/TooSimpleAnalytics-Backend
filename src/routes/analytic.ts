@@ -9,6 +9,7 @@ import { removeProject } from "../controllers/analytic/remove-project.js";
 import { createDummyProject } from "../controllers/analytic/create-dummy-project.js";
 import { locationTest } from "../controllers/analytic/location-test.js";
 import { getProjectInfoByDate } from "../controllers/analytic/get-project-info-by-dates.js";
+import { getThumbnailsInfo } from "../controllers/analytic/get-thumbnails-info.js";
 
 const getClientIp = requestIp.mw();
 export const router = Router();
@@ -23,6 +24,10 @@ router.get("/projects", authenticate, (req, res) => {
 
 router.post("/projects/by-date", authenticate, (req, res) => {
   getProjectInfoByDate(req, res);
+});
+
+router.get("/projects/thumbnails", authenticate, (req, res) => {
+  getThumbnailsInfo(req, res);
 });
 
 router.post("/create-project", authenticate, (req, res) => {

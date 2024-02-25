@@ -1,14 +1,7 @@
-interface DateObject {
-  [year: number]: {
-    [month: number]:
-      | number
-      | {
-          [day: number]: number;
-        };
-  };
-}
+import { DateObject } from "../interfaces/date-object";
 
 export function getDateRangeProjection(startDate: Date, endDate: Date) {
+  //! BEWARE! STARTDATE IS THE EARLIER DATE AND ENDDATE IS THE LATER DATE SWITCHING THEM WILL GIVE EMPTY OBJECT
   const dateRange: DateObject = {};
 
   const startMonth = startDate.getMonth();

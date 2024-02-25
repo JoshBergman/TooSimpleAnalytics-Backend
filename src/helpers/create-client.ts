@@ -9,7 +9,6 @@ export const createClient = () => {
   const client = new MongoClient(uri, {
     serverApi: {
       version: "1",
-      strict: true,
       deprecationErrors: true,
     },
   });
