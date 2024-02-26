@@ -66,13 +66,19 @@ export const getThumbnailsInfo = async (req: Request, res: Response) => {
       { id: id },
       {
         projection: {
+          permID: 1,
           projects: projectsWithProjection,
         },
       }
     );
 
-    if (findUserResponse && findUserResponse.projects !== null) {
+    if (
+      findUserResponse &&
+      findUserResponse.projects !== null &&
+      findUserResponse.permID !== null
+    ) {
       res.status(200).json({
+        projectsID: findUserResponse.permID,
         projects: findUserResponse.projects,
       });
     } else {
