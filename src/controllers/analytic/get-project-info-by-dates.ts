@@ -46,7 +46,6 @@ export const getProjectInfoByDate = async (req: Request, res: Response) => {
 
     if (findUserResponse && findUserResponse.projects !== null) {
       res.status(200).json({
-        projectsID: findUserResponse.permID,
         projects: findUserResponse.projects,
       });
     } else {

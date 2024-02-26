@@ -55,6 +55,7 @@ export const getThumbnailsInfo = async (req: Request, res: Response) => {
         const currProjectName = projectNames[i];
         projectsWithProjection[currProjectName] = {
           viewDates: viewDatesProjections,
+          totalViews: 1,
         };
       }
       return projectsWithProjection;
