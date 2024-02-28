@@ -40,10 +40,11 @@ export const getThumbnailsInfo = async (req: Request, res: Response) => {
         .json({ error: "Server Error. Please try again shortly." });
     }
 
-    console.log(aggregrationResponse);
     let projectNames: string[] = [];
     if (
-      typeof aggregrationResponse === "object" &&
+      Array.isArray(aggregrationResponse) &&
+      aggregrationResponse.length >= 1 &&
+      typeof aggregrationResponse[0] === "object" &&
       aggregrationResponse[0]["allkeys"]
     ) {
       projectNames = aggregrationResponse[0].allkeys;
@@ -53,6 +54,7 @@ export const getThumbnailsInfo = async (req: Request, res: Response) => {
       res.status(200).json({
         projects: {},
       });
+      return;
     }
 
     const getProjectNamesWithProjection = () => {
