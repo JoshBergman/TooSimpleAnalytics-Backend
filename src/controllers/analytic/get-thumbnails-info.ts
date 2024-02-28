@@ -40,7 +40,14 @@ export const getThumbnailsInfo = async (req: Request, res: Response) => {
         .json({ error: "Server Error. Please try again shortly." });
     }
 
-    const projectNames: string[] = aggregrationResponse[0].allkeys;
+    let projectNames: string[] = [];
+    if (
+      aggregrationResponse.length >= 1 &&
+      aggregrationResponse[0]["allkeys"]
+    ) {
+      projectNames = aggregrationResponse[0].allkeys;
+    }
+
     if (projectNames.length <= 0) {
       res.status(200).json({
         projects: {},
