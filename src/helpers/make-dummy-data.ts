@@ -5,7 +5,7 @@ export const makeDummyData = () => {
   let totalViews = 0;
   const viewDates: IUser["projects"]["project"]["viewDates"] = {};
 
-  const today = new Date();
+  const today = new Date(2025, 5, 5);
   const currYear = today.getFullYear();
   const date = new Date(2022, 0, 1);
   while (date < today) {
